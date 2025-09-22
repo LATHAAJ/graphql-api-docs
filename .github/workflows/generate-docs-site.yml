@@ -29,16 +29,16 @@ jobs:
       - name: Download schema file
         run: |
           # Download the schema file directly from the main repository
-          # Try main branch first, then fallback to documentGeneration branch
-          echo "🔄 Attempting to download schema from main branch..."
+          # Try documentGeneration branch first (where our changes are), then fallback to main branch
+          echo "🔄 Attempting to download schema from documentGeneration branch..."
           curl -H "Authorization: token ${{ secrets.MAIN_REPO_TOKEN }}" \
                -H "Accept: application/vnd.github.v3.raw" \
                -o schema.graphql \
-               "https://api.github.com/repos/LATHAAJ/GraphQl-players/contents/src/main/resources/graphql/schema.graphql?ref=main" || \
+               "https://api.github.com/repos/LATHAAJ/GraphQl-players/contents/src/main/resources/graphql/schema.graphql?ref=documentGeneration" || \
           curl -H "Authorization: token ${{ secrets.MAIN_REPO_TOKEN }}" \
                -H "Accept: application/vnd.github.v3.raw" \
                -o schema.graphql \
-               "https://api.github.com/repos/LATHAAJ/GraphQl-players/contents/src/main/resources/graphql/schema.graphql?ref=documentGeneration"
+               "https://api.github.com/repos/LATHAAJ/GraphQl-players/contents/src/main/resources/graphql/schema.graphql?ref=main"
           
           echo "✅ Schema file downloaded successfully"
           echo "📁 Schema file contents:"
