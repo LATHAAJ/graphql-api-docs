@@ -28,9 +28,6 @@ jobs:
 
       - name: Download schema file
         run: |
-          # Download the schema file directly from the main repository
-          # Try documentGeneration branch first (where our changes are), then fallback to main branch
-          echo "🔄 Attempting to download schema from documentGeneration branch..."
           curl -H "Authorization: token ${{ secrets.MAIN_REPO_TOKEN }}" \
                -H "Accept: application/vnd.github.v3.raw" \
                -o schema.graphql \
@@ -39,10 +36,6 @@ jobs:
                -H "Accept: application/vnd.github.v3.raw" \
                -o schema.graphql \
                "https://api.github.com/repos/LATHAAJ/GraphQl-players/contents/src/main/resources/graphql/schema.graphql?ref=main"
-          
-          echo "✅ Schema file downloaded successfully"
-          echo "📁 Schema file contents:"
-          head -10 schema.graphql
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -55,18 +48,11 @@ jobs:
 
       - name: Generate documentation
         run: |
-          echo "🔄 Generating GraphQL documentation..."
           npx graphql-markdown ./schema.graphql --title "GraphQL API Documentation" > schema-documentation.md
-          echo "✅ Documentation generated successfully"
 
       - name: Update documentation files
         run: |
-          # Update the main documentation file
           cp schema-documentation.md docs/graphql/schema-documentation.md
-          
-          echo "✅ Documentation files updated successfully"
-          echo "📁 Files created:"
-          ls -la docs/graphql/schema-documentation.md
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
