@@ -1,0 +1,53 @@
+name: Update Documentation with Versioning
+
+on:
+  push:
+    paths:
+      - 'src/main/resources/graphql/schema.graphql'
+  workflow_dispatch:
+
+jobs:
+  update-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Generate documentation
+        run: |
+          npx graphql-markdown ./src/main/resources/graphql/schema.graphql --title "GraphQL API Documentation" > schema-documentation.md
+          
+          # Add version info
+          echo "" >> schema-documentation.md
+          echo "---" >> schema-documentation.md
+          echo "**Last Updated:** $(date)" >> schema-documentation.md
+          echo "**Schema Version:** ${{ github.sha }}" >> schema-documentation.md
+          echo "**Branch:** ${{ github.ref_name }}" >> schema-documentation.md
+
+      - name: Checkout docs repo
+        uses: actions/checkout@v4
+        with:
+          repository: your-username/your-docs-repo
+          path: docs-repo
+          token: ${{ secrets.DOCS_REPO_TOKEN }}
+
+      - name: Update documentation
+        run: |
+          cp schema-documentation.md docs-repo/docs/graphql/schema-documentation.md
+          
+          # Create versioned copy
+          mkdir -p docs-repo/docs/graphql/versions
+          cp schema-documentation.md "docs-repo/docs/graphql/versions/schema-v${{ github.run_number }}.md"
+          
+          cd docs-repo
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add docs/graphql/
+          git diff --staged --quiet || git commit -m "Update GraphQL documentation from schema changes [skip ci]"
+          git push
+

@@ -1,0 +1,44 @@
+name: Generate Documentation Site
+
+on:
+  push:
+    paths:
+      - 'src/main/resources/graphql/schema.graphql'
+  workflow_dispatch:
+
+jobs:
+  generate-docs-site:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Generate documentation
+        run: |
+          npx graphql-markdown ./src/main/resources/graphql/schema.graphql --title "GraphQL API Documentation" > schema-documentation.md
+
+      - name: Setup GitBook or MkDocs
+        run: |
+          npm install -g @gitbook/cli
+          # or: pip install mkdocs mkdocs-material
+
+      - name: Generate static site
+        run: |
+          # Create site structure
+          mkdir -p docs-site
+          cp schema-documentation.md docs-site/index.md
+          
+          # Generate site (example with GitBook)
+          # gitbook build docs-site docs-site/_book
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs-site
+

@@ -1,0 +1,22 @@
+name: Trigger Documentation Webhook
+
+on:
+  push:
+    paths:
+      - 'src/main/resources/graphql/schema.graphql'
+
+jobs:
+  trigger-webhook:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger documentation update
+        run: |
+          curl -X POST "${{ secrets.DOCS_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.DOCS_WEBHOOK_TOKEN }}" \
+            -d '{
+              "repository": "${{ github.repository }}",
+              "commit": "${{ github.sha }}",
+              "schema_path": "src/main/resources/graphql/schema.graphql"
+            }'
+
