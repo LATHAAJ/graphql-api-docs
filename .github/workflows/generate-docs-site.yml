@@ -26,27 +26,17 @@ jobs:
             echo "✅ MAIN_REPO_TOKEN secret is configured"
           fi
 
-      - name: Checkout main GraphQL repo
-        uses: actions/checkout@v4
-        with:
-          repository: LATHAAJ/GraphQl-players
-          path: main
-          token: ${{ secrets.MAIN_REPO_TOKEN }}
-          ref: documentGeneration
-          submodules: false
-
-      - name: Debug - List files in main
+      - name: Download schema file
         run: |
-          echo "Contents of main directory:"
-          ls -la main/
-          echo "Contents of main/src directory:"
-          ls -la main/src/ || echo "src directory not found"
-          echo "Contents of main/src/main directory:"
-          ls -la main/src/main/ || echo "src/main directory not found"
-          echo "Contents of main/src/main/resources directory:"
-          ls -la main/src/main/resources/ || echo "src/main/resources directory not found"
-          echo "Contents of main/src/main/resources/graphql directory:"
-          ls -la main/src/main/resources/graphql/ || echo "src/main/resources/graphql directory not found"
+          # Download the schema file directly from the main repository
+          curl -H "Authorization: token ${{ secrets.MAIN_REPO_TOKEN }}" \
+               -H "Accept: application/vnd.github.v3.raw" \
+               -o schema.graphql \
+               "https://api.github.com/repos/LATHAAJ/GraphQl-players/contents/src/main/resources/graphql/schema.graphql?ref=documentGeneration"
+          
+          echo "✅ Schema file downloaded successfully"
+          echo "📁 Schema file contents:"
+          head -10 schema.graphql
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -59,7 +49,7 @@ jobs:
 
       - name: Generate documentation
         run: |
-          npx graphql-markdown ./main/src/main/resources/graphql/schema.graphql --title "GraphQL API Documentation" > schema-documentation.md
+          npx graphql-markdown ./schema.graphql --title "GraphQL API Documentation" > schema-documentation.md
 
       - name: Update documentation files
         run: |
