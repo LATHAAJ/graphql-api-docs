@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout docs repo
         uses: actions/checkout@v4
+        with:
+          submodules: false
 
       - name: Check if MAIN_REPO_TOKEN exists
         run: |
@@ -31,6 +33,7 @@ jobs:
           path: main-repo
           token: ${{ secrets.MAIN_REPO_TOKEN }}
           ref: documentGeneration
+          submodules: false
 
       - name: Debug - List files in main-repo
         run: |
