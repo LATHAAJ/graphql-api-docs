@@ -4,11 +4,33 @@
   <summary><strong>Table of Contents</strong></summary>
 
   * [Query](#query)
+    * [findAll](#query.findall)
+    * [findPlayerById](#query.findplayerbyid)
+    * [findPlayersByTeam](#query.findplayersbyteam)
+    * [findPlayersByRole](#query.findplayersbyrole)
+    * [findAllMatches](#query.findallmatches)
+    * [findMatchById](#query.findmatchbyid)
+    * [findPlayerStats](#query.findplayerstats)
+    * [findPlayersByCountry](#query.findplayersbycountry)
+    * [findPlayersByAgeRange](#query.findplayersbyagerange)
+    * [findPlayersByCountryAndTeam](#query.findplayersbycountryandteam)
+    * [findPlayersByRoleAndAge](#query.findplayersbyroleandage)
+    * [findPlayersByCriteria](#query.findplayersbycriteria)
+    * [getPlayerStatisticsBreakdown](#query.getplayerstatisticsbreakdown)
   * [Mutation](#mutation)
+    * [createPlayer](#mutation.createplayer)
+    * [updatePlayer](#mutation.updateplayer)
+    * [deletePlayer](#mutation.deleteplayer)
+    * [createMatch](#mutation.creatematch)
+    * [updatePlayerStats](#mutation.updateplayerstats)
   * [Objects](#objects)
+    * [BattingStats](#battingstats)
+    * [BowlingStats](#bowlingstats)
+    * [FieldingStats](#fieldingstats)
     * [Match](#match)
     * [Player](#player)
     * [PlayerStats](#playerstats)
+    * [PlayerStatsBreakdown](#playerstatsbreakdown)
   * [Enums](#enums)
     * [MatchResult](#matchresult)
     * [PlayerRole](#playerrole)
@@ -113,6 +135,130 @@ Look up a specific match by its unique identifier
 <td>
 
 Get detailed statistics for a specific player
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">playerId</td>
+<td valign="top"><a href="#id">ID</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong id="query.findplayersbycountry">findPlayersByCountry</strong></td>
+<td valign="top">[<a href="#player">Player</a>]</td>
+<td>
+
+Find all players from a specific country
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">country</td>
+<td valign="top"><a href="#string">String</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong id="query.findplayersbyagerange">findPlayersByAgeRange</strong></td>
+<td valign="top">[<a href="#player">Player</a>]</td>
+<td>
+
+Find players by age range
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">minAge</td>
+<td valign="top"><a href="#int">Int</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">maxAge</td>
+<td valign="top"><a href="#int">Int</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong id="query.findplayersbycountryandteam">findPlayersByCountryAndTeam</strong></td>
+<td valign="top">[<a href="#player">Player</a>]</td>
+<td>
+
+Find players by country and team
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">country</td>
+<td valign="top"><a href="#string">String</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">team</td>
+<td valign="top"><a href="#team">Team</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong id="query.findplayersbyroleandage">findPlayersByRoleAndAge</strong></td>
+<td valign="top">[<a href="#player">Player</a>]</td>
+<td>
+
+Find players by role and age range
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">role</td>
+<td valign="top"><a href="#playerrole">PlayerRole</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">minAge</td>
+<td valign="top"><a href="#int">Int</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">maxAge</td>
+<td valign="top"><a href="#int">Int</a>!</td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong id="query.findplayersbycriteria">findPlayersByCriteria</strong></td>
+<td valign="top">[<a href="#player">Player</a>]</td>
+<td>
+
+Find players by multiple criteria
+
+</td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">country</td>
+<td valign="top"><a href="#string">String</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">team</td>
+<td valign="top"><a href="#team">Team</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">role</td>
+<td valign="top"><a href="#playerrole">PlayerRole</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">minAge</td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" align="right" valign="top">maxAge</td>
+<td valign="top"><a href="#int">Int</a></td>
+<td></td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong id="query.getplayerstatisticsbreakdown">getPlayerStatisticsBreakdown</strong></td>
+<td valign="top"><a href="#playerstatsbreakdown">PlayerStatsBreakdown</a></td>
+<td>
+
+Get player statistics with detailed breakdown
 
 </td>
 </tr>
@@ -299,6 +445,165 @@ Update or create player statistics
 </table>
 
 ## Objects
+
+### BattingStats
+
+Detailed batting statistics for a player.
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong id="battingstats.totalruns">totalRuns</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td>
+
+Total runs scored
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong id="battingstats.average">average</strong></td>
+<td valign="top"><a href="#float">Float</a></td>
+<td>
+
+Batting average
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong id="battingstats.strikerate">strikeRate</strong></td>
+<td valign="top"><a href="#float">Float</a></td>
+<td>
+
+Strike rate
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong id="battingstats.centuries">centuries</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td>
+
+Number of centuries
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong id="battingstats.halfcenturies">halfCenturies</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td>
+
+Number of half-centuries
+
+</td>
+</tr>
+</tbody>
+</table>
+
+### BowlingStats
+
+Detailed bowling statistics for a player.
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong id="bowlingstats.totalwickets">totalWickets</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td>
+
+Total wickets taken
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong id="bowlingstats.average">average</strong></td>
+<td valign="top"><a href="#float">Float</a></td>
+<td>
+
+Bowling average
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong id="bowlingstats.economyrate">economyRate</strong></td>
+<td valign="top"><a href="#float">Float</a></td>
+<td>
+
+Economy rate
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong id="bowlingstats.fivewickethauls">fiveWicketHauls</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td>
+
+Number of 5-wicket hauls
+
+</td>
+</tr>
+</tbody>
+</table>
+
+### FieldingStats
+
+Detailed fielding statistics for a player.
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong id="fieldingstats.catches">catches</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td>
+
+Number of catches taken
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong id="fieldingstats.stumpings">stumpings</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td>
+
+Number of stumpings (for wicket keepers)
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong id="fieldingstats.runouts">runOuts</strong></td>
+<td valign="top"><a href="#int">Int</a></td>
+<td>
+
+Number of run outs
+
+</td>
+</tr>
+</tbody>
+</table>
 
 ### Match
 
@@ -513,6 +818,59 @@ The player's batting or bowling average
 </tbody>
 </table>
 
+### PlayerStatsBreakdown
+
+Contains detailed breakdown of player statistics by different categories.
+
+<table>
+<thead>
+<tr>
+<th align="left">Field</th>
+<th align="right">Argument</th>
+<th align="left">Type</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td colspan="2" valign="top"><strong id="playerstatsbreakdown.playerid">playerId</strong></td>
+<td valign="top"><a href="#id">ID</a>!</td>
+<td>
+
+The unique identifier of the player
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong id="playerstatsbreakdown.batting">batting</strong></td>
+<td valign="top"><a href="#battingstats">BattingStats</a></td>
+<td>
+
+Batting statistics breakdown
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong id="playerstatsbreakdown.bowling">bowling</strong></td>
+<td valign="top"><a href="#bowlingstats">BowlingStats</a></td>
+<td>
+
+Bowling statistics breakdown
+
+</td>
+</tr>
+<tr>
+<td colspan="2" valign="top"><strong id="playerstatsbreakdown.fielding">fielding</strong></td>
+<td valign="top"><a href="#fieldingstats">FieldingStats</a></td>
+<td>
+
+Fielding statistics breakdown
+
+</td>
+</tr>
+</tbody>
+</table>
+
 ## Enums
 
 ### MatchResult
@@ -685,5 +1043,4 @@ The `Int` scalar type represents non-fractional signed whole numeric values. Int
 ### String
 
 The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
-
 
