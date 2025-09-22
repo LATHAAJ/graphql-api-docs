@@ -82,7 +82,7 @@ jobs:
           git config --local user.name "GitHub Action"
           git add .
           git diff --staged --quiet || git commit -m "Update GraphQL documentation from schema changes [skip ci]"
-          git push
+          git push https://${{ secrets.MAIN_REPO_TOKEN }}@github.com/LATHAAJ/graphql-api-docs.git
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
