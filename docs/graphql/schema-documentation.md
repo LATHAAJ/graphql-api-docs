@@ -1,1046 +1,197 @@
-# GraphQL API Documentation
-
-<details>
-  <summary><strong>Table of Contents</strong></summary>
-
-  * [Query](#query)
-    * [findAll](#query.findall)
-    * [findPlayerById](#query.findplayerbyid)
-    * [findPlayersByTeam](#query.findplayersbyteam)
-    * [findPlayersByRole](#query.findplayersbyrole)
-    * [findAllMatches](#query.findallmatches)
-    * [findMatchById](#query.findmatchbyid)
-    * [findPlayerStats](#query.findplayerstats)
-    * [findPlayersByCountry](#query.findplayersbycountry)
-    * [findPlayersByAgeRange](#query.findplayersbyagerange)
-    * [findPlayersByCountryAndTeam](#query.findplayersbycountryandteam)
-    * [findPlayersByRoleAndAge](#query.findplayersbyroleandage)
-    * [findPlayersByCriteria](#query.findplayersbycriteria)
-    * [getPlayerStatisticsBreakdown](#query.getplayerstatisticsbreakdown)
-  * [Mutation](#mutation)
-    * [createPlayer](#mutation.createplayer)
-    * [updatePlayer](#mutation.updateplayer)
-    * [deletePlayer](#mutation.deleteplayer)
-    * [createMatch](#mutation.creatematch)
-    * [updatePlayerStats](#mutation.updateplayerstats)
-  * [Objects](#objects)
-    * [BattingStats](#battingstats)
-    * [BowlingStats](#bowlingstats)
-    * [FieldingStats](#fieldingstats)
-    * [Match](#match)
-    * [Player](#player)
-    * [PlayerStats](#playerstats)
-    * [PlayerStatsBreakdown](#playerstatsbreakdown)
-  * [Enums](#enums)
-    * [MatchResult](#matchresult)
-    * [PlayerRole](#playerrole)
-    * [Team](#team)
-  * [Scalars](#scalars)
-    * [Boolean](#boolean)
-    * [Float](#float)
-    * [ID](#id)
-    * [Int](#int)
-    * [String](#string)
-
-</details>
-
-## Query
-<table>
-<thead>
-<tr>
-<th align="left">Field</th>
-<th align="right">Argument</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong id="query.findall">findAll</strong></td>
-<td valign="top">[<a href="#player">Player</a>]</td>
-<td>
-
-Retrieve all cricket players in the system
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="query.findplayerbyid">findPlayerById</strong></td>
-<td valign="top"><a href="#player">Player</a></td>
-<td>
-
-Look up a specific player by their unique identifier
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">id</td>
-<td valign="top"><a href="#id">ID</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="query.findplayersbyteam">findPlayersByTeam</strong></td>
-<td valign="top">[<a href="#player">Player</a>]</td>
-<td>
-
-Find all players belonging to a specific team
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">team</td>
-<td valign="top"><a href="#team">Team</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="query.findplayersbyrole">findPlayersByRole</strong></td>
-<td valign="top">[<a href="#player">Player</a>]</td>
-<td>
-
-Find all players with a specific role (batsman, bowler, etc.)
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">role</td>
-<td valign="top"><a href="#playerrole">PlayerRole</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="query.findallmatches">findAllMatches</strong></td>
-<td valign="top">[<a href="#match">Match</a>]</td>
-<td>
-
-Retrieve all cricket matches in the system
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="query.findmatchbyid">findMatchById</strong></td>
-<td valign="top"><a href="#match">Match</a></td>
-<td>
-
-Look up a specific match by its unique identifier
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">id</td>
-<td valign="top"><a href="#id">ID</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="query.findplayerstats">findPlayerStats</strong></td>
-<td valign="top"><a href="#playerstats">PlayerStats</a></td>
-<td>
-
-Get detailed statistics for a specific player
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">playerId</td>
-<td valign="top"><a href="#id">ID</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="query.findplayersbycountry">findPlayersByCountry</strong></td>
-<td valign="top">[<a href="#player">Player</a>]</td>
-<td>
-
-Find all players from a specific country
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">country</td>
-<td valign="top"><a href="#string">String</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="query.findplayersbyagerange">findPlayersByAgeRange</strong></td>
-<td valign="top">[<a href="#player">Player</a>]</td>
-<td>
-
-Find players by age range
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">minAge</td>
-<td valign="top"><a href="#int">Int</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">maxAge</td>
-<td valign="top"><a href="#int">Int</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="query.findplayersbycountryandteam">findPlayersByCountryAndTeam</strong></td>
-<td valign="top">[<a href="#player">Player</a>]</td>
-<td>
-
-Find players by country and team
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">country</td>
-<td valign="top"><a href="#string">String</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">team</td>
-<td valign="top"><a href="#team">Team</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="query.findplayersbyroleandage">findPlayersByRoleAndAge</strong></td>
-<td valign="top">[<a href="#player">Player</a>]</td>
-<td>
-
-Find players by role and age range
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">role</td>
-<td valign="top"><a href="#playerrole">PlayerRole</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">minAge</td>
-<td valign="top"><a href="#int">Int</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">maxAge</td>
-<td valign="top"><a href="#int">Int</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="query.findplayersbycriteria">findPlayersByCriteria</strong></td>
-<td valign="top">[<a href="#player">Player</a>]</td>
-<td>
-
-Find players by multiple criteria
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">country</td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">team</td>
-<td valign="top"><a href="#team">Team</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">role</td>
-<td valign="top"><a href="#playerrole">PlayerRole</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">minAge</td>
-<td valign="top"><a href="#int">Int</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">maxAge</td>
-<td valign="top"><a href="#int">Int</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="query.getplayerstatisticsbreakdown">getPlayerStatisticsBreakdown</strong></td>
-<td valign="top"><a href="#playerstatsbreakdown">PlayerStatsBreakdown</a></td>
-<td>
-
-Get player statistics with detailed breakdown
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">playerId</td>
-<td valign="top"><a href="#id">ID</a>!</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-
-## Mutation
-<table>
-<thead>
-<tr>
-<th align="left">Field</th>
-<th align="right">Argument</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong id="mutation.createplayer">createPlayer</strong></td>
-<td valign="top"><a href="#player">Player</a></td>
-<td>
-
-Create a new cricket player in the system
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">name</td>
-<td valign="top"><a href="#string">String</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">team</td>
-<td valign="top"><a href="#team">Team</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">role</td>
-<td valign="top"><a href="#playerrole">PlayerRole</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">age</td>
-<td valign="top"><a href="#int">Int</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">dateOfBirth</td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">country</td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="mutation.updateplayer">updatePlayer</strong></td>
-<td valign="top"><a href="#player">Player</a></td>
-<td>
-
-Update an existing player's information
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">id</td>
-<td valign="top"><a href="#id">ID</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">name</td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">team</td>
-<td valign="top"><a href="#team">Team</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">role</td>
-<td valign="top"><a href="#playerrole">PlayerRole</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">age</td>
-<td valign="top"><a href="#int">Int</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">dateOfBirth</td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">country</td>
-<td valign="top"><a href="#string">String</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="mutation.deleteplayer">deletePlayer</strong></td>
-<td valign="top"><a href="#boolean">Boolean</a></td>
-<td>
-
-Remove a player from the system
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">id</td>
-<td valign="top"><a href="#id">ID</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="mutation.creatematch">createMatch</strong></td>
-<td valign="top"><a href="#match">Match</a></td>
-<td>
-
-Create a new cricket match record
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">opponent</td>
-<td valign="top"><a href="#string">String</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">matchDate</td>
-<td valign="top"><a href="#string">String</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">venue</td>
-<td valign="top"><a href="#string">String</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">result</td>
-<td valign="top"><a href="#matchresult">MatchResult</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="mutation.updateplayerstats">updatePlayerStats</strong></td>
-<td valign="top"><a href="#playerstats">PlayerStats</a></td>
-<td>
-
-Update or create player statistics
-
-</td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">playerId</td>
-<td valign="top"><a href="#id">ID</a>!</td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">matchesPlayed</td>
-<td valign="top"><a href="#int">Int</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">runs</td>
-<td valign="top"><a href="#int">Int</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">wickets</td>
-<td valign="top"><a href="#int">Int</a></td>
-<td></td>
-</tr>
-<tr>
-<td colspan="2" align="right" valign="top">average</td>
-<td valign="top"><a href="#float">Float</a></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-
-## Objects
-
-### BattingStats
-
-Detailed batting statistics for a player.
-
-<table>
-<thead>
-<tr>
-<th align="left">Field</th>
-<th align="right">Argument</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong id="battingstats.totalruns">totalRuns</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
-<td>
-
-Total runs scored
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="battingstats.average">average</strong></td>
-<td valign="top"><a href="#float">Float</a></td>
-<td>
-
-Batting average
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="battingstats.strikerate">strikeRate</strong></td>
-<td valign="top"><a href="#float">Float</a></td>
-<td>
-
-Strike rate
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="battingstats.centuries">centuries</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
-<td>
-
-Number of centuries
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="battingstats.halfcenturies">halfCenturies</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
-<td>
-
-Number of half-centuries
-
-</td>
-</tr>
-</tbody>
-</table>
-
-### BowlingStats
-
-Detailed bowling statistics for a player.
-
-<table>
-<thead>
-<tr>
-<th align="left">Field</th>
-<th align="right">Argument</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong id="bowlingstats.totalwickets">totalWickets</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
-<td>
-
-Total wickets taken
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="bowlingstats.average">average</strong></td>
-<td valign="top"><a href="#float">Float</a></td>
-<td>
-
-Bowling average
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="bowlingstats.economyrate">economyRate</strong></td>
-<td valign="top"><a href="#float">Float</a></td>
-<td>
-
-Economy rate
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="bowlingstats.fivewickethauls">fiveWicketHauls</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
-<td>
-
-Number of 5-wicket hauls
-
-</td>
-</tr>
-</tbody>
-</table>
-
-### FieldingStats
-
-Detailed fielding statistics for a player.
-
-<table>
-<thead>
-<tr>
-<th align="left">Field</th>
-<th align="right">Argument</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong id="fieldingstats.catches">catches</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
-<td>
-
-Number of catches taken
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="fieldingstats.stumpings">stumpings</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
-<td>
-
-Number of stumpings (for wicket keepers)
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="fieldingstats.runouts">runOuts</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
-<td>
-
-Number of run outs
-
-</td>
-</tr>
-</tbody>
-</table>
-
-### Match
-
-Represents a cricket match with opponent details, venue, and result.
-
-<table>
-<thead>
-<tr>
-<th align="left">Field</th>
-<th align="right">Argument</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong id="match.id">id</strong></td>
-<td valign="top"><a href="#id">ID</a>!</td>
-<td>
-
-Unique identifier for the match
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="match.opponent">opponent</strong></td>
-<td valign="top"><a href="#string">String</a>!</td>
-<td>
-
-The opposing team in the match
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="match.matchdate">matchDate</strong></td>
-<td valign="top"><a href="#string">String</a>!</td>
-<td>
-
-The date when the match was played
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="match.venue">venue</strong></td>
-<td valign="top"><a href="#string">String</a>!</td>
-<td>
-
-The location where the match was played
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="match.result">result</strong></td>
-<td valign="top"><a href="#matchresult">MatchResult</a>!</td>
-<td>
-
-The result of the match
-
-</td>
-</tr>
-</tbody>
-</table>
+# GraphQL Schema Documentation
+
+This document provides a comprehensive reference for the Cricket Players Management GraphQL API schema.
+
+## Queries
+
+### findAll
+Retrieve all cricket players in the system.
+
+**Type:** `[Player]`
+
+### findPlayerById
+Look up a specific player by their unique identifier.
+
+**Arguments:**
+- `id: ID!` - The player's unique identifier
+
+**Type:** `Player`
+
+### findPlayersByTeam
+Find all players belonging to a specific team.
+
+**Arguments:**
+- `team: Team!` - The team to filter by
+
+**Type:** `[Player]`
+
+### findPlayersByRole
+Find all players with a specific role.
+
+**Arguments:**
+- `role: PlayerRole!` - The role to filter by
+
+**Type:** `[Player]`
+
+### findAllMatches
+Retrieve all cricket matches in the system.
+
+**Type:** `[Match]`
+
+### findMatchById
+Look up a specific match by its unique identifier.
+
+**Arguments:**
+- `id: ID!` - The match's unique identifier
+
+**Type:** `Match`
+
+### findPlayerStats
+Get detailed statistics for a specific player.
+
+**Arguments:**
+- `playerId: ID!` - The player's unique identifier
+
+**Type:** `PlayerStats`
+
+## Mutations
+
+### createPlayer
+Create a new cricket player in the system.
+
+**Arguments:**
+- `name: String!` - Player's name
+- `team: Team!` - Player's team
+- `role: PlayerRole!` - Player's role
+- `age: Int` - Player's age (optional)
+- `dateOfBirth: String` - Player's date of birth (optional)
+- `country: String` - Player's country (optional)
+
+**Type:** `Player`
+
+### updatePlayer
+Update an existing player's information.
+
+**Arguments:**
+- `id: ID!` - Player's unique identifier
+- `name: String` - Player's name (optional)
+- `team: Team` - Player's team (optional)
+- `role: PlayerRole` - Player's role (optional)
+- `age: Int` - Player's age (optional)
+- `dateOfBirth: String` - Player's date of birth (optional)
+- `country: String` - Player's country (optional)
+
+**Type:** `Player`
+
+### deletePlayer
+Remove a player from the system.
+
+**Arguments:**
+- `id: ID!` - Player's unique identifier
+
+**Type:** `Boolean`
+
+### createMatch
+Create a new cricket match record.
+
+**Arguments:**
+- `opponent: String!` - Opposing team name
+- `matchDate: String!` - Date of the match
+- `venue: String!` - Match venue
+- `result: MatchResult!` - Match result
+
+**Type:** `Match`
+
+### updatePlayerStats
+Update or create player statistics.
+
+**Arguments:**
+- `playerId: ID!` - Player's unique identifier
+- `matchesPlayed: Int` - Number of matches played (optional)
+- `runs: Int` - Total runs scored (optional)
+- `wickets: Int` - Total wickets taken (optional)
+- `average: Float` - Player's average (optional)
+
+**Type:** `PlayerStats`
+
+## Types
 
 ### Player
-
 Represents a cricket player with their basic information, team affiliation, and role.
 
-<table>
-<thead>
-<tr>
-<th align="left">Field</th>
-<th align="right">Argument</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong id="player.id">id</strong></td>
-<td valign="top"><a href="#id">ID</a>!</td>
-<td>
+**Fields:**
+- `id: ID!` - Unique identifier for the player
+- `name: String!` - The name of the player
+- `team: Team!` - The team the player belongs to
+- `role: PlayerRole!` - The role/position of the player
+- `age: Int` - The age of the player
+- `dateOfBirth: String` - The player's date of birth
+- `country: String` - The country the player represents
+- `stats: PlayerStats` - Detailed statistics for the player
 
-Unique identifier for the player
+### Match
+Represents a cricket match with opponent details, venue, and result.
 
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="player.name">name</strong></td>
-<td valign="top"><a href="#string">String</a>!</td>
-<td>
-
-The name of the player
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="player.team">team</strong></td>
-<td valign="top"><a href="#team">Team</a>!</td>
-<td>
-
-The team the player belongs to
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="player.role">role</strong></td>
-<td valign="top"><a href="#playerrole">PlayerRole</a>!</td>
-<td>
-
-The role/position of the player
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="player.age">age</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
-<td>
-
-The age of the player
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="player.dateofbirth">dateOfBirth</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td>
-
-The player's date of birth
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="player.country">country</strong></td>
-<td valign="top"><a href="#string">String</a></td>
-<td>
-
-The country the player represents
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="player.stats">stats</strong></td>
-<td valign="top"><a href="#playerstats">PlayerStats</a></td>
-<td>
-
-Detailed statistics for the player
-
-</td>
-</tr>
-</tbody>
-</table>
+**Fields:**
+- `id: ID!` - Unique identifier for the match
+- `opponent: String!` - The opposing team in the match
+- `matchDate: String!` - The date when the match was played
+- `venue: String!` - The location where the match was played
+- `result: MatchResult!` - The result of the match
 
 ### PlayerStats
-
 Contains detailed statistical information about a player's performance.
 
-<table>
-<thead>
-<tr>
-<th align="left">Field</th>
-<th align="right">Argument</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong id="playerstats.playerid">playerId</strong></td>
-<td valign="top"><a href="#id">ID</a>!</td>
-<td>
-
-The unique identifier of the player
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="playerstats.matchesplayed">matchesPlayed</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
-<td>
-
-Number of matches the player has participated in
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="playerstats.runs">runs</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
-<td>
-
-Total runs scored by the player
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="playerstats.wickets">wickets</strong></td>
-<td valign="top"><a href="#int">Int</a></td>
-<td>
-
-Total wickets taken by the player
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="playerstats.average">average</strong></td>
-<td valign="top"><a href="#float">Float</a></td>
-<td>
-
-The player's batting or bowling average
-
-</td>
-</tr>
-</tbody>
-</table>
-
-### PlayerStatsBreakdown
-
-Contains detailed breakdown of player statistics by different categories.
-
-<table>
-<thead>
-<tr>
-<th align="left">Field</th>
-<th align="right">Argument</th>
-<th align="left">Type</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td colspan="2" valign="top"><strong id="playerstatsbreakdown.playerid">playerId</strong></td>
-<td valign="top"><a href="#id">ID</a>!</td>
-<td>
-
-The unique identifier of the player
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="playerstatsbreakdown.batting">batting</strong></td>
-<td valign="top"><a href="#battingstats">BattingStats</a></td>
-<td>
-
-Batting statistics breakdown
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="playerstatsbreakdown.bowling">bowling</strong></td>
-<td valign="top"><a href="#bowlingstats">BowlingStats</a></td>
-<td>
-
-Bowling statistics breakdown
-
-</td>
-</tr>
-<tr>
-<td colspan="2" valign="top"><strong id="playerstatsbreakdown.fielding">fielding</strong></td>
-<td valign="top"><a href="#fieldingstats">FieldingStats</a></td>
-<td>
-
-Fielding statistics breakdown
-
-</td>
-</tr>
-</tbody>
-</table>
+**Fields:**
+- `playerId: ID!` - The unique identifier of the player
+- `matchesPlayed: Int` - Number of matches the player has participated in
+- `runs: Int` - Total runs scored by the player
+- `wickets: Int` - Total wickets taken by the player
+- `average: Float` - The player's batting or bowling average
 
 ## Enums
 
-### MatchResult
-
-Possible outcomes of a cricket match.
-
-<table>
-<thead>
-<tr>
-<th align="left">Value</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td valign="top"><strong>WON</strong></td>
-<td>
-
-Team won the match
-
-</td>
-</tr>
-<tr>
-<td valign="top"><strong>LOST</strong></td>
-<td>
-
-Team lost the match
-
-</td>
-</tr>
-<tr>
-<td valign="top"><strong>DRAW</strong></td>
-<td>
-
-Match ended in a draw
-
-</td>
-</tr>
-<tr>
-<td valign="top"><strong>NO_RESULT</strong></td>
-<td>
-
-Match had no result (rain, etc.)
-
-</td>
-</tr>
-</tbody>
-</table>
-
 ### PlayerRole
-
 Different roles a cricket player can have.
 
-<table>
-<thead>
-<tr>
-<th align="left">Value</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td valign="top"><strong>BATSMAN</strong></td>
-<td>
-
-Player who specializes in batting
-
-</td>
-</tr>
-<tr>
-<td valign="top"><strong>BOWLER</strong></td>
-<td>
-
-Player who specializes in bowling
-
-</td>
-</tr>
-<tr>
-<td valign="top"><strong>ALL_ROUNDER</strong></td>
-<td>
-
-Player who can both bat and bowl effectively
-
-</td>
-</tr>
-<tr>
-<td valign="top"><strong>WICKET_KEEPER</strong></td>
-<td>
-
-Player who keeps wickets
-
-</td>
-</tr>
-</tbody>
-</table>
+**Values:**
+- `BATSMAN` - Player who specializes in batting
+- `BOWLER` - Player who specializes in bowling
+- `ALL_ROUNDER` - Player who can both bat and bowl effectively
+- `WICKET_KEEPER` - Player who keeps wickets
 
 ### Team
-
 Available cricket teams in the system.
 
-<table>
-<thead>
-<tr>
-<th align="left">Value</th>
-<th align="left">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td valign="top"><strong>CSk</strong></td>
-<td>
+**Values:**
+- `CSK` - Chennai Super Kings
+- `MI` - Mumbai Indians
+- `DC` - Delhi Capitals
+- `RCB` - Royal Challengers Bangalore
+- `GT` - Gujarat Titans
 
-Chennai Super Kings
+### MatchResult
+Possible outcomes of a cricket match.
 
-</td>
-</tr>
-<tr>
-<td valign="top"><strong>MI</strong></td>
-<td>
-
-Mumbai Indians
-
-</td>
-</tr>
-<tr>
-<td valign="top"><strong>DC</strong></td>
-<td>
-
-Delhi Capitals
-
-</td>
-</tr>
-<tr>
-<td valign="top"><strong>RCB</strong></td>
-<td>
-
-Royal Challengers Bangalore
-
-</td>
-</tr>
-<tr>
-<td valign="top"><strong>GT</strong></td>
-<td>
-
-Gujarat Titans
-
-</td>
-</tr>
-</tbody>
-</table>
+**Values:**
+- `WON` - Team won the match
+- `LOST` - Team lost the match
+- `DRAW` - Match ended in a draw
+- `NO_RESULT` - Match had no result (rain, etc.)
 
 ## Scalars
 
 ### Boolean
-
 The `Boolean` scalar type represents `true` or `false`.
 
 ### Float
-
-The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](https://en.wikipedia.org/wiki/IEEE_floating_point).
+The `Float` scalar type represents signed double-precision fractional values as specified by IEEE 754.
 
 ### ID
-
-The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
+The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache.
 
 ### Int
-
 The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
 
 ### String
-
-The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
-
+The `String` scalar type represents textual data, represented as UTF-8 character sequences.
