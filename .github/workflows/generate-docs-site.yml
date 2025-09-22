@@ -28,6 +28,7 @@ jobs:
 
       - name: Download schema file
         run: |
+          echo "🔄 Downloading schema from documentGeneration branch..."
           curl -H "Authorization: token ${{ secrets.MAIN_REPO_TOKEN }}" \
                -H "Accept: application/vnd.github.v3.raw" \
                -o schema.graphql \
@@ -36,6 +37,11 @@ jobs:
                -H "Accept: application/vnd.github.v3.raw" \
                -o schema.graphql \
                "https://api.github.com/repos/LATHAAJ/GraphQl-players/contents/src/main/resources/graphql/schema.graphql?ref=main"
+          
+          echo "✅ Schema downloaded. Checking for new fields..."
+          grep -n "jerseyNumber\|nickname" schema.graphql || echo "❌ New fields not found in schema"
+          echo "📋 First 20 lines of schema:"
+          head -20 schema.graphql
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -48,7 +54,10 @@ jobs:
 
       - name: Generate documentation
         run: |
+          echo "🔄 Generating documentation..."
           npx graphql-markdown ./schema.graphql --title "GraphQL API Documentation" > schema-documentation.md
+          echo "✅ Documentation generated. Checking for new fields in docs..."
+          grep -n "jerseyNumber\|nickname" schema-documentation.md || echo "❌ New fields not found in generated docs"
 
       - name: Update documentation files
         run: |
