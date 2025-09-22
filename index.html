@@ -5,104 +5,629 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GraphQL API Documentation</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             line-height: 1.6;
-            color: #333;
+            color: #24292f;
+            background: #ffffff;
         }
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding: 20px;
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
             background: #f6f8fa;
-            border-radius: 8px;
+            border-right: 1px solid #d0d7de;
+            padding: 24px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
         }
-        .content {
-            margin-bottom: 30px;
+
+        .sidebar-header {
+            padding: 0 24px 16px;
+            border-bottom: 1px solid #d0d7de;
+            margin-bottom: 16px;
         }
-        .link {
+
+        .sidebar-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #24292f;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 14px;
+            color: #656d76;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #656d76;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0 24px 8px;
+            margin-bottom: 8px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 6px 24px;
+            color: #24292f;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .nav-item:hover {
+            background: #eaeef2;
+            color: #0969da;
+        }
+
+        .nav-item.active {
+            background: #dbeafe;
+            color: #0969da;
+            font-weight: 500;
+            border-right: 2px solid #0969da;
+        }
+
+        .nav-subitem {
+            padding-left: 40px;
+            font-size: 13px;
+            color: #656d76;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 0;
+        }
+
+        .content-header {
+            background: #ffffff;
+            border-bottom: 1px solid #d0d7de;
+            padding: 16px 32px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .breadcrumb {
+            font-size: 14px;
+            color: #656d76;
+            margin-bottom: 8px;
+        }
+
+        .breadcrumb a {
+            color: #0969da;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #24292f;
+            margin-bottom: 8px;
+        }
+
+        .page-description {
+            font-size: 16px;
+            color: #656d76;
+        }
+
+        .content-body {
+            padding: 32px;
+            max-width: 800px;
+        }
+
+        .section {
+            margin-bottom: 32px;
+        }
+
+        .section h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #24292f;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #d0d7de;
+        }
+
+        .section h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #24292f;
+            margin-bottom: 12px;
+            margin-top: 24px;
+        }
+
+        .section h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #24292f;
+            margin-bottom: 8px;
+            margin-top: 16px;
+        }
+
+        .section p {
+            margin-bottom: 16px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .section ul, .section ol {
+            margin-bottom: 16px;
+            padding-left: 24px;
+        }
+
+        .section li {
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .code-block {
+            background: #f6f8fa;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            padding: 16px;
+            margin: 16px 0;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+
+        .code-inline {
+            background: #f6f8fa;
+            border: 1px solid #d0d7de;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 14px;
+        }
+
+        .alert {
+            padding: 16px;
+            border-radius: 6px;
+            margin: 16px 0;
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            border-left-color: #0969da;
+            color: #0969da;
+        }
+
+        .alert-success {
+            background: #dcfce7;
+            border-left-color: #16a34a;
+            color: #16a34a;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #d0d7de;
+        }
+
+        th {
+            background: #f6f8fa;
+            font-weight: 600;
+            color: #24292f;
+        }
+
+        tr:hover {
+            background: #f6f8fa;
+        }
+
+        .link-button {
             display: inline-block;
-            padding: 10px 20px;
-            margin: 10px;
-            background: #0366d6;
+            padding: 8px 16px;
+            background: #0969da;
             color: white;
             text-decoration: none;
             border-radius: 6px;
-            transition: background 0.2s;
-        }
-        .link:hover {
-            background: #0256cc;
-        }
-        .footer {
-            margin-top: 40px;
-            padding: 20px;
-            background: #f6f8fa;
-            border-radius: 8px;
-            text-align: center;
             font-size: 14px;
-            color: #666;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            margin: 4px 8px 4px 0;
+        }
+
+        .link-button:hover {
+            background: #0860ca;
+            color: white;
+        }
+
+        .link-button.secondary {
+            background: #f6f8fa;
+            color: #24292f;
+            border: 1px solid #d0d7de;
+        }
+
+        .link-button.secondary:hover {
+            background: #eaeef2;
+            color: #24292f;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .content-body {
+                padding: 16px;
+            }
+        }
+
+        /* GitHub-style markdown content */
+        .markdown-content h1 {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #d0d7de;
+        }
+
+        .markdown-content h2 {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 32px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #d0d7de;
+        }
+
+        .markdown-content h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 24px 0 12px;
+        }
+
+        .markdown-content pre {
+            background: #f6f8fa;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 14px;
+        }
+
+        .markdown-content code {
+            background: #f6f8fa;
+            border: 1px solid #d0d7de;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 14px;
+        }
+
+        .markdown-content pre code {
+            background: none;
+            border: none;
+            padding: 0;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>🚀 GraphQL API Documentation</h1>
-        <p>Welcome to the GraphQL API Documentation for Cricket Players Management System</p>
-    </div>
+    <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">GraphQL API</div>
+                <div class="sidebar-subtitle">Cricket Players Management</div>
+            </div>
 
-    <div class="content">
-        <h2>📋 Quick Links</h2>
-        <a href="./docs/graphql/schema-documentation.md" class="link">📄 Schema Documentation</a>
-        <a href="./docs/schema-documentation.md" class="link">📊 API Reference</a>
-        <a href="./docs/schema-documentation-with-descriptions.md" class="link">📝 Detailed Documentation</a>
-        <a href="./docs/schema-documentation-preview.md" class="link">👀 Preview Documentation</a>
-    </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Overview</div>
+                <a href="#overview" class="nav-item active">About the GraphQL API</a>
+                <a href="#getting-started" class="nav-item">Getting Started</a>
+                <a href="#authentication" class="nav-item">Authentication</a>
+                <a href="#rate-limits" class="nav-item">Rate Limits</a>
+            </div>
 
-    <div class="content">
-        <h2>🔍 About This API</h2>
-        <p>This GraphQL API provides comprehensive management for cricket players, teams, matches, and statistics. The API supports:</p>
-        <ul>
-            <li><strong>Player Management:</strong> Create, read, update, and delete player information</li>
-            <li><strong>Team Operations:</strong> Manage team affiliations and player transfers</li>
-            <li><strong>Match Tracking:</strong> Record and track cricket matches</li>
-            <li><strong>Statistics:</strong> Detailed player performance analytics</li>
-        </ul>
-    </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Reference</div>
+                <a href="#queries" class="nav-item">Queries</a>
+                <a href="#mutations" class="nav-item">Mutations</a>
+                <a href="#types" class="nav-item">Types</a>
+                <a href="#enums" class="nav-item">Enums</a>
+            </div>
 
-    <div class="content">
-        <h2>🛠️ Available Operations</h2>
-        <h3>Queries</h3>
-        <ul>
-            <li><code>findAll</code> - Get all players</li>
-            <li><code>findPlayerById</code> - Get player by ID</li>
-            <li><code>findPlayersByTeam</code> - Get players by team</li>
-            <li><code>findPlayersByRole</code> - Get players by role</li>
-            <li><code>findAllMatches</code> - Get all matches</li>
-            <li><code>findMatchById</code> - Get match by ID</li>
-            <li><code>findPlayerStats</code> - Get player statistics</li>
-        </ul>
-        
-        <h3>Mutations</h3>
-        <ul>
-            <li><code>createPlayer</code> - Create new player</li>
-            <li><code>updatePlayer</code> - Update player information</li>
-            <li><code>deletePlayer</code> - Delete player</li>
-            <li><code>createMatch</code> - Create new match</li>
-            <li><code>updatePlayerStats</code> - Update player statistics</li>
-        </ul>
-    </div>
+            <div class="nav-section">
+                <div class="nav-section-title">Documentation</div>
+                <a href="./docs/graphql/schema-documentation.md" class="nav-item">Schema Documentation</a>
+                <a href="./docs/schema-documentation.md" class="nav-item">API Reference</a>
+                <a href="./docs/schema-documentation-with-descriptions.md" class="nav-item">Detailed Documentation</a>
+                <a href="./docs/schema-documentation-preview.md" class="nav-item">Preview Documentation</a>
+            </div>
 
-    <div class="footer">
-        <p>📅 Last updated: <span id="lastUpdated"></span></p>
-        <p>🔄 This documentation is automatically generated from the GraphQL schema</p>
-        <p>📚 For more information, visit the <a href="https://github.com/LATHAAJ/GraphQl-players">main repository</a></p>
+            <div class="nav-section">
+                <div class="nav-section-title">Resources</div>
+                <a href="https://github.com/LATHAAJ/GraphQl-players" class="nav-item">Source Code</a>
+                <a href="https://github.com/LATHAAJ/GraphQl-players/issues" class="nav-item">Report Issues</a>
+                <a href="https://github.com/LATHAAJ/GraphQl-players/discussions" class="nav-item">Discussions</a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <div class="breadcrumb">
+                    <a href="#">GraphQL API</a> / <a href="#">Overview</a> /
+                </div>
+                <h1 class="page-title">About the GraphQL API</h1>
+                <p class="page-description">The Cricket Players Management GraphQL API offers flexibility and the ability to define precisely the data you want to fetch.</p>
+            </header>
+
+            <div class="content-body">
+                <section id="overview" class="section">
+                    <h2>Overview</h2>
+                    <p>Quick links to get you up and running with the GraphQL API:</p>
+                    <ul>
+                        <li><a href="#authentication">Authentication</a></li>
+                        <li><a href="#queries">Root endpoint</a></li>
+                        <li><a href="#types">Schema introspection</a></li>
+                        <li><a href="#rate-limits">Rate limits</a></li>
+                        <li><a href="#getting-started">Getting started</a></li>
+                    </ul>
+                </section>
+
+                <section id="about-graphql" class="section">
+                    <h2>About GraphQL</h2>
+                    <p>The GraphQL data query language is:</p>
+                    <ul>
+                        <li><strong>A specification.</strong> The spec determines the validity of the schema on the API server. The schema determines the validity of client calls.</li>
+                        <li><strong>Strongly typed.</strong> Every GraphQL service defines a complete type system for the data it serves.</li>
+                        <li><strong>Introspective.</strong> A GraphQL service can be queried for the types it supports.</li>
+                    </ul>
+                </section>
+
+                <section id="getting-started" class="section">
+                    <h2>Getting Started</h2>
+                    <p>This GraphQL API provides comprehensive management for cricket players, teams, matches, and statistics. The API supports:</p>
+                    <ul>
+                        <li><strong>Player Management:</strong> Create, read, update, and delete player information</li>
+                        <li><strong>Team Operations:</strong> Manage team affiliations and player transfers</li>
+                        <li><strong>Match Tracking:</strong> Record and track cricket matches</li>
+                        <li><strong>Statistics:</strong> Detailed player performance analytics</li>
+                    </ul>
+
+                    <div class="alert alert-info">
+                        <strong>💡 Tip:</strong> Use the interactive documentation to explore the API schema and test queries.
+                    </div>
+                </section>
+
+                <section id="queries" class="section">
+                    <h2>Available Queries</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>findAll</code></td>
+                                    <td><code>[Player]</code></td>
+                                    <td>Retrieve all cricket players in the system</td>
+                                </tr>
+                                <tr>
+                                    <td><code>findPlayerById</code></td>
+                                    <td><code>Player</code></td>
+                                    <td>Look up a specific player by their unique identifier</td>
+                                </tr>
+                                <tr>
+                                    <td><code>findPlayersByTeam</code></td>
+                                    <td><code>[Player]</code></td>
+                                    <td>Get all players belonging to a specific team</td>
+                                </tr>
+                                <tr>
+                                    <td><code>findPlayersByRole</code></td>
+                                    <td><code>[Player]</code></td>
+                                    <td>Find players by their role (Batsman, Bowler, etc.)</td>
+                                </tr>
+                                <tr>
+                                    <td><code>findAllMatches</code></td>
+                                    <td><code>[Match]</code></td>
+                                    <td>Retrieve all cricket matches</td>
+                                </tr>
+                                <tr>
+                                    <td><code>findMatchById</code></td>
+                                    <td><code>Match</code></td>
+                                    <td>Look up a specific match by its unique identifier</td>
+                                </tr>
+                                <tr>
+                                    <td><code>findPlayerStats</code></td>
+                                    <td><code>PlayerStats</code></td>
+                                    <td>Get detailed statistics for a specific player</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="mutations" class="section">
+                    <h2>Available Mutations</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>createPlayer</code></td>
+                                    <td><code>Player</code></td>
+                                    <td>Create a new cricket player</td>
+                                </tr>
+                                <tr>
+                                    <td><code>updatePlayer</code></td>
+                                    <td><code>Player</code></td>
+                                    <td>Update existing player information</td>
+                                </tr>
+                                <tr>
+                                    <td><code>deletePlayer</code></td>
+                                    <td><code>Boolean</code></td>
+                                    <td>Delete a player from the system</td>
+                                </tr>
+                                <tr>
+                                    <td><code>createMatch</code></td>
+                                    <td><code>Match</code></td>
+                                    <td>Create a new cricket match</td>
+                                </tr>
+                                <tr>
+                                    <td><code>updatePlayerStats</code></td>
+                                    <td><code>PlayerStats</code></td>
+                                    <td>Update player performance statistics</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="types" class="section">
+                    <h2>Core Types</h2>
+                    <h3>Player</h3>
+                    <p>Represents a cricket player with their basic information and team affiliation.</p>
+                    
+                    <h3>Match</h3>
+                    <p>Represents a cricket match with teams, date, and result information.</p>
+                    
+                    <h3>PlayerStats</h3>
+                    <p>Contains detailed performance statistics for a player.</p>
+                </section>
+
+                <section id="enums" class="section">
+                    <h2>Enums</h2>
+                    <h3>PlayerRole</h3>
+                    <div class="code-block">
+BATSMAN
+BOWLER
+WICKET_KEEPER
+ALL_ROUNDER
+                    </div>
+                    
+                    <h3>Team</h3>
+                    <div class="code-block">
+INDIA
+AUSTRALIA
+ENGLAND
+SOUTH_AFRICA
+PAKISTAN
+SRI_LANKA
+NEW_ZEALAND
+WEST_INDIES
+BANGLADESH
+AFGHANISTAN
+                    </div>
+                    
+                    <h3>MatchResult</h3>
+                    <div class="code-block">
+WIN
+LOSS
+TIE
+NO_RESULT
+                    </div>
+                </section>
+
+                <section id="authentication" class="section">
+                    <h2>Authentication</h2>
+                    <p>This API uses standard HTTP authentication. Include your API key in the request headers:</p>
+                    <div class="code-block">
+Authorization: Bearer YOUR_API_KEY
+                    </div>
+                </section>
+
+                <section id="rate-limits" class="section">
+                    <h2>Rate Limits</h2>
+                    <p>The API has the following rate limits:</p>
+                    <ul>
+                        <li><strong>1000 requests per hour</strong> for authenticated users</li>
+                        <li><strong>100 requests per hour</strong> for unauthenticated users</li>
+                        <li>Rate limit headers are included in all responses</li>
+                    </ul>
+                </section>
+
+                <section class="section">
+                    <h2>Quick Actions</h2>
+                    <a href="./docs/graphql/schema-documentation.md" class="link-button">📄 View Schema Documentation</a>
+                    <a href="./docs/schema-documentation.md" class="link-button secondary">📊 API Reference</a>
+                    <a href="https://github.com/LATHAAJ/GraphQl-players" class="link-button secondary">🔗 Source Code</a>
+                </section>
+            </div>
+        </main>
     </div>
 
     <script>
-        document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString();
+        // Simple navigation highlighting
+        document.addEventListener('DOMContentLoaded', function() {
+            const navItems = document.querySelectorAll('.nav-item');
+            const sections = document.querySelectorAll('.section');
+            
+            // Add click handlers for navigation
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    if (this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href').substring(1);
+                        const targetSection = document.getElementById(targetId);
+                        
+                        if (targetSection) {
+                            targetSection.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>
