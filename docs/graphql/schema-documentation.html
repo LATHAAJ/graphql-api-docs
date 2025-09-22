@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schema Documentation - GraphQL API</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #24292f;
+            background: #ffffff;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: #f6f8fa;
+            border-right: 1px solid #d0d7de;
+            padding: 24px 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: 0 24px 16px;
+            border-bottom: 1px solid #d0d7de;
+            margin-bottom: 16px;
+        }
+
+        .sidebar-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #24292f;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 14px;
+            color: #656d76;
+        }
+
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #656d76;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0 24px 8px;
+            margin-bottom: 8px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 6px 24px;
+            color: #24292f;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        .nav-item:hover {
+            background: #eaeef2;
+            color: #0969da;
+        }
+
+        .nav-item.active {
+            background: #dbeafe;
+            color: #0969da;
+            font-weight: 500;
+            border-right: 2px solid #0969da;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 0;
+        }
+
+        .content-header {
+            background: #ffffff;
+            border-bottom: 1px solid #d0d7de;
+            padding: 16px 32px;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .breadcrumb {
+            font-size: 14px;
+            color: #656d76;
+            margin-bottom: 8px;
+        }
+
+        .breadcrumb a {
+            color: #0969da;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #24292f;
+            margin-bottom: 8px;
+        }
+
+        .page-description {
+            font-size: 16px;
+            color: #656d76;
+        }
+
+        .content-body {
+            padding: 32px;
+            max-width: 1000px;
+        }
+
+        .section {
+            margin-bottom: 32px;
+        }
+
+        .section h1 {
+            font-size: 32px;
+            font-weight: 600;
+            color: #24292f;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #d0d7de;
+        }
+
+        .section h2 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #24292f;
+            margin: 32px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #d0d7de;
+        }
+
+        .section h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #24292f;
+            margin: 24px 0 12px;
+        }
+
+        .section h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #24292f;
+            margin: 16px 0 8px;
+        }
+
+        .section p {
+            margin-bottom: 16px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .section ul, .section ol {
+            margin-bottom: 16px;
+            padding-left: 24px;
+        }
+
+        .section li {
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .toc {
+            background: #f6f8fa;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .toc h3 {
+            margin: 0 0 12px 0;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .toc ul {
+            margin: 0;
+            padding-left: 16px;
+        }
+
+        .toc li {
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .toc a {
+            color: #0969da;
+            text-decoration: none;
+        }
+
+        .toc a:hover {
+            text-decoration: underline;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 16px 0;
+            border: 1px solid #d0d7de;
+            border-radius: 6px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #d0d7de;
+        }
+
+        th {
+            background: #f6f8fa;
+            font-weight: 600;
+            color: #24292f;
+            border-bottom: 2px solid #d0d7de;
+        }
+
+        tr:hover {
+            background: #f6f8fa;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .field-name {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-weight: 600;
+            color: #0969da;
+        }
+
+        .type-name {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            color: #8250df;
+        }
+
+        .required {
+            color: #d1242f;
+        }
+
+        .enum-value {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            background: #f6f8fa;
+            border: 1px solid #d0d7de;
+            border-radius: 3px;
+            padding: 2px 6px;
+            font-size: 13px;
+        }
+
+        .scalar-description {
+            background: #f6f8fa;
+            border-left: 4px solid #0969da;
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .back-link {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #0969da;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            margin-bottom: 24px;
+        }
+
+        .back-link:hover {
+            background: #0860ca;
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .content-body {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">GraphQL API</div>
+                <div class="sidebar-subtitle">Cricket Players Management</div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Overview</div>
+                <a href="../index.html" class="nav-item">About the GraphQL API</a>
+                <a href="../index.html#getting-started" class="nav-item">Getting Started</a>
+                <a href="../index.html#authentication" class="nav-item">Authentication</a>
+                <a href="../index.html#rate-limits" class="nav-item">Rate Limits</a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Reference</div>
+                <a href="#query" class="nav-item">Queries</a>
+                <a href="#mutation" class="nav-item">Mutations</a>
+                <a href="#objects" class="nav-item">Objects</a>
+                <a href="#enums" class="nav-item">Enums</a>
+                <a href="#scalars" class="nav-item">Scalars</a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Documentation</div>
+                <a href="#" class="nav-item active">Schema Documentation</a>
+                <a href="../docs/schema-documentation.md" class="nav-item">API Reference</a>
+                <a href="../docs/schema-documentation-with-descriptions.md" class="nav-item">Detailed Documentation</a>
+                <a href="../docs/schema-documentation-preview.md" class="nav-item">Preview Documentation</a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Resources</div>
+                <a href="https://github.com/LATHAAJ/GraphQl-players" class="nav-item">Source Code</a>
+                <a href="https://github.com/LATHAAJ/GraphQl-players/issues" class="nav-item">Report Issues</a>
+                <a href="https://github.com/LATHAAJ/GraphQl-players/discussions" class="nav-item">Discussions</a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="content-header">
+                <div class="breadcrumb">
+                    <a href="../index.html">GraphQL API</a> / <a href="#">Documentation</a> / Schema Documentation
+                </div>
+                <h1 class="page-title">Schema Documentation</h1>
+                <p class="page-description">Complete GraphQL schema reference for the Cricket Players Management API</p>
+            </header>
+
+            <div class="content-body">
+                <a href="../index.html" class="back-link">← Back to Overview</a>
+
+                <div class="toc">
+                    <h3>Table of Contents</h3>
+                    <ul>
+                        <li><a href="#query">Query</a></li>
+                        <li><a href="#mutation">Mutation</a></li>
+                        <li><a href="#objects">Objects</a>
+                            <ul>
+                                <li><a href="#match">Match</a></li>
+                                <li><a href="#player">Player</a></li>
+                                <li><a href="#playerstats">PlayerStats</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#enums">Enums</a>
+                            <ul>
+                                <li><a href="#matchresult">MatchResult</a></li>
+                                <li><a href="#playerrole">PlayerRole</a></li>
+                                <li><a href="#team">Team</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#scalars">Scalars</a>
+                            <ul>
+                                <li><a href="#boolean">Boolean</a></li>
+                                <li><a href="#float">Float</a></li>
+                                <li><a href="#id">ID</a></li>
+                                <li><a href="#int">Int</a></li>
+                                <li><a href="#string">String</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <section id="query" class="section">
+                    <h2>Query</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Argument</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="field-name">findAll</span></td>
+                                    <td></td>
+                                    <td><span class="type-name">[Player]</span></td>
+                                    <td>Retrieve all cricket players in the system</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="field-name">findPlayerById</span></td>
+                                    <td><span class="field-name">id</span>: <span class="type-name">ID!</span></td>
+                                    <td><span class="type-name">Player</span></td>
+                                    <td>Look up a specific player by their unique identifier</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="field-name">findPlayersByTeam</span></td>
+                                    <td><span class="field-name">team</span>: <span class="type-name">Team!</span></td>
+                                    <td><span class="type-name">[Player]</span></td>
+                                    <td>Find all players belonging to a specific team</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="field-name">findPlayersByRole</span></td>
+                                    <td><span class="field-name">role</span>: <span class="type-name">PlayerRole!</span></td>
+                                    <td><span class="type-name">[Player]</span></td>
+                                    <td>Find all players with a specific role (batsman, bowler, etc.)</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="field-name">findAllMatches</span></td>
+                                    <td></td>
+                                    <td><span class="type-name">[Match]</span></td>
+                                    <td>Retrieve all cricket matches in the system</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="field-name">findMatchById</span></td>
+                                    <td><span class="field-name">id</span>: <span class="type-name">ID!</span></td>
+                                    <td><span class="type-name">Match</span></td>
+                                    <td>Look up a specific match by its unique identifier</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="field-name">findPlayerStats</span></td>
+                                    <td><span class="field-name">playerId</span>: <span class="type-name">ID!</span></td>
+                                    <td><span class="type-name">PlayerStats</span></td>
+                                    <td>Get detailed statistics for a specific player</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="mutation" class="section">
+                    <h2>Mutation</h2>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Field</th>
+                                    <th>Argument</th>
+                                    <th>Type</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="field-name">createPlayer</span></td>
+                                    <td>
+                                        <span class="field-name">name</span>: <span class="type-name">String!</span><br>
+                                        <span class="field-name">team</span>: <span class="type-name">Team!</span><br>
+                                        <span class="field-name">role</span>: <span class="type-name">PlayerRole!</span><br>
+                                        <span class="field-name">age</span>: <span class="type-name">Int</span><br>
+                                        <span class="field-name">dateOfBirth</span>: <span class="type-name">String</span><br>
+                                        <span class="field-name">country</span>: <span class="type-name">String</span>
+                                    </td>
+                                    <td><span class="type-name">Player</span></td>
+                                    <td>Create a new cricket player in the system</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="field-name">updatePlayer</span></td>
+                                    <td>
+                                        <span class="field-name">id</span>: <span class="type-name">ID!</span><br>
+                                        <span class="field-name">name</span>: <span class="type-name">String</span><br>
+                                        <span class="field-name">team</span>: <span class="type-name">Team</span><br>
+                                        <span class="field-name">role</span>: <span class="type-name">PlayerRole</span><br>
+                                        <span class="field-name">age</span>: <span class="type-name">Int</span><br>
+                                        <span class="field-name">dateOfBirth</span>: <span class="type-name">String</span><br>
+                                        <span class="field-name">country</span>: <span class="type-name">String</span>
+                                    </td>
+                                    <td><span class="type-name">Player</span></td>
+                                    <td>Update an existing player's information</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="field-name">deletePlayer</span></td>
+                                    <td><span class="field-name">id</span>: <span class="type-name">ID!</span></td>
+                                    <td><span class="type-name">Boolean</span></td>
+                                    <td>Remove a player from the system</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="field-name">createMatch</span></td>
+                                    <td>
+                                        <span class="field-name">opponent</span>: <span class="type-name">String!</span><br>
+                                        <span class="field-name">matchDate</span>: <span class="type-name">String!</span><br>
+                                        <span class="field-name">venue</span>: <span class="type-name">String!</span><br>
+                                        <span class="field-name">result</span>: <span class="type-name">MatchResult!</span>
+                                    </td>
+                                    <td><span class="type-name">Match</span></td>
+                                    <td>Create a new cricket match record</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="field-name">updatePlayerStats</span></td>
+                                    <td>
+                                        <span class="field-name">playerId</span>: <span class="type-name">ID!</span><br>
+                                        <span class="field-name">matchesPlayed</span>: <span class="type-name">Int</span><br>
+                                        <span class="field-name">runs</span>: <span class="type-name">Int</span><br>
+                                        <span class="field-name">wickets</span>: <span class="type-name">Int</span><br>
+                                        <span class="field-name">average</span>: <span class="type-name">Float</span>
+                                    </td>
+                                    <td><span class="type-name">PlayerStats</span></td>
+                                    <td>Update or create player statistics</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="objects" class="section">
+                    <h2>Objects</h2>
+
+                    <section id="match" class="section">
+                        <h3>Match</h3>
+                        <p>Represents a cricket match with opponent details, venue, and result.</p>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Field</th>
+                                        <th>Type</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="field-name">id</span></td>
+                                        <td><span class="type-name">ID!</span></td>
+                                        <td>Unique identifier for the match</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">opponent</span></td>
+                                        <td><span class="type-name">String!</span></td>
+                                        <td>The opposing team in the match</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">matchDate</span></td>
+                                        <td><span class="type-name">String!</span></td>
+                                        <td>The date when the match was played</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">venue</span></td>
+                                        <td><span class="type-name">String!</span></td>
+                                        <td>The location where the match was played</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">result</span></td>
+                                        <td><span class="type-name">MatchResult!</span></td>
+                                        <td>The result of the match</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <section id="player" class="section">
+                        <h3>Player</h3>
+                        <p>Represents a cricket player with their basic information, team affiliation, and role.</p>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Field</th>
+                                        <th>Type</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="field-name">id</span></td>
+                                        <td><span class="type-name">ID!</span></td>
+                                        <td>Unique identifier for the player</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">name</span></td>
+                                        <td><span class="type-name">String!</span></td>
+                                        <td>The name of the player</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">team</span></td>
+                                        <td><span class="type-name">Team!</span></td>
+                                        <td>The team the player belongs to</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">role</span></td>
+                                        <td><span class="type-name">PlayerRole!</span></td>
+                                        <td>The role/position of the player</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">age</span></td>
+                                        <td><span class="type-name">Int</span></td>
+                                        <td>The age of the player</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">dateOfBirth</span></td>
+                                        <td><span class="type-name">String</span></td>
+                                        <td>The player's date of birth</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">country</span></td>
+                                        <td><span class="type-name">String</span></td>
+                                        <td>The country the player represents</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">stats</span></td>
+                                        <td><span class="type-name">PlayerStats</span></td>
+                                        <td>Detailed statistics for the player</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <section id="playerstats" class="section">
+                        <h3>PlayerStats</h3>
+                        <p>Contains detailed statistical information about a player's performance.</p>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Field</th>
+                                        <th>Type</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="field-name">playerId</span></td>
+                                        <td><span class="type-name">ID!</span></td>
+                                        <td>The unique identifier of the player</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">matchesPlayed</span></td>
+                                        <td><span class="type-name">Int</span></td>
+                                        <td>Number of matches the player has participated in</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">runs</span></td>
+                                        <td><span class="type-name">Int</span></td>
+                                        <td>Total runs scored by the player</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">wickets</span></td>
+                                        <td><span class="type-name">Int</span></td>
+                                        <td>Total wickets taken by the player</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">average</span></td>
+                                        <td><span class="type-name">Float</span></td>
+                                        <td>The player's batting or bowling average</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </section>
+
+                <section id="enums" class="section">
+                    <h2>Enums</h2>
+
+                    <section id="matchresult" class="section">
+                        <h3>MatchResult</h3>
+                        <p>Possible outcomes of a cricket match.</p>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Value</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="enum-value">WON</span></td>
+                                        <td>Team won the match</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="enum-value">LOST</span></td>
+                                        <td>Team lost the match</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="enum-value">DRAW</span></td>
+                                        <td>Match ended in a draw</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="enum-value">NO_RESULT</span></td>
+                                        <td>Match had no result (rain, etc.)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <section id="playerrole" class="section">
+                        <h3>PlayerRole</h3>
+                        <p>Different roles a cricket player can have.</p>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Value</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="enum-value">BATSMAN</span></td>
+                                        <td>Player who specializes in batting</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="enum-value">BOWLER</span></td>
+                                        <td>Player who specializes in bowling</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="enum-value">ALL_ROUNDER</span></td>
+                                        <td>Player who can both bat and bowl effectively</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="enum-value">WICKET_KEEPER</span></td>
+                                        <td>Player who keeps wickets</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <section id="team" class="section">
+                        <h3>Team</h3>
+                        <p>Available cricket teams in the system.</p>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Value</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="enum-value">CSK</span></td>
+                                        <td>Chennai Super Kings</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="enum-value">MI</span></td>
+                                        <td>Mumbai Indians</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="enum-value">DC</span></td>
+                                        <td>Delhi Capitals</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="enum-value">RCB</span></td>
+                                        <td>Royal Challengers Bangalore</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="enum-value">GT</span></td>
+                                        <td>Gujarat Titans</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </section>
+
+                <section id="scalars" class="section">
+                    <h2>Scalars</h2>
+
+                    <section id="boolean" class="section">
+                        <h3>Boolean</h3>
+                        <div class="scalar-description">
+                            The <code>Boolean</code> scalar type represents <code>true</code> or <code>false</code>.
+                        </div>
+                    </section>
+
+                    <section id="float" class="section">
+                        <h3>Float</h3>
+                        <div class="scalar-description">
+                            The <code>Float</code> scalar type represents signed double-precision fractional values as specified by <a href="https://en.wikipedia.org/wiki/IEEE_floating_point" target="_blank">IEEE 754</a>.
+                        </div>
+                    </section>
+
+                    <section id="id" class="section">
+                        <h3>ID</h3>
+                        <div class="scalar-description">
+                            The <code>ID</code> scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as <code>"4"</code>) or integer (such as <code>4</code>) input value will be accepted as an ID.
+                        </div>
+                    </section>
+
+                    <section id="int" class="section">
+                        <h3>Int</h3>
+                        <div class="scalar-description">
+                            The <code>Int</code> scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1.
+                        </div>
+                    </section>
+
+                    <section id="string" class="section">
+                        <h3>String</h3>
+                        <div class="scalar-description">
+                            The <code>String</code> scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
+                        </div>
+                    </section>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Simple navigation highlighting
+        document.addEventListener('DOMContentLoaded', function() {
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            // Add click handlers for navigation
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    if (this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href').substring(1);
+                        const targetSection = document.getElementById(targetId);
+                        
+                        if (targetSection) {
+                            targetSection.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
