@@ -1,0 +1,97 @@
+name: Update Documentation from Schema
+
+on:
+  repository_dispatch:
+    types: [schema-updated]
+
+jobs:
+  update-documentation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout docs repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout main repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.client_payload.repository }}
+          path: main-repo
+          token: ${{ secrets.MAIN_REPO_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Generate updated documentation
+        run: |
+          cd main-repo
+          npx graphql-markdown ./src/main/resources/graphql/schema.graphql --title "GraphQL API Documentation" > ../schema-documentation.md
+          
+          # Add metadata
+          echo "" >> ../schema-documentation.md
+          echo "---" >> ../schema-documentation.md
+          echo "**Last Updated:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')" >> ../schema-documentation.md
+          echo "**Schema Commit:** ${{ github.event.client_payload.schema_commit }}" >> ../schema-documentation.md
+          echo "**Branch:** ${{ github.event.client_payload.branch }}" >> ../schema-documentation.md
+          echo "**Triggered by:** ${{ github.event.client_payload.triggered_by }}" >> ../schema-documentation.md
+
+      - name: Create directory structure
+        run: |
+          mkdir -p docs/graphql
+          mkdir -p docs/versions
+
+      - name: Update documentation files
+        run: |
+          # Update main documentation
+          cp schema-documentation.md docs/graphql/schema-documentation.md
+          
+          # Create versioned copy
+          TIMESTAMP=$(date -u '+%Y%m%d-%H%M%S')
+          cp schema-documentation.md "docs/versions/schema-v${TIMESTAMP}.md"
+          
+          # Update README with latest info
+          cat > README.md << EOF
+          # GraphQL API Documentation
+          
+          This repository contains automatically generated documentation for the GraphQL API.
+          
+          ## Latest Documentation
+          
+          - **[Current Schema Documentation](docs/graphql/schema-documentation.md)**
+          - **Last Updated:** $(date -u '+%Y-%m-%d %H:%M:%S UTC')
+          - **Schema Commit:** ${{ github.event.client_payload.schema_commit }}
+          - **Branch:** ${{ github.event.client_payload.branch }}
+          
+          ## Documentation Versions
+          
+          All previous versions of the documentation are stored in the [docs/versions](docs/versions/) directory.
+          
+          ## How it works
+          
+          This documentation is automatically updated whenever the GraphQL schema changes in the main repository. The update is triggered by a repository dispatch event.
+          
+          ## Manual Update
+          
+          If you need to manually trigger a documentation update, you can:
+          
+          1. Go to the main repository
+          2. Navigate to Actions
+          3. Run the "Update Documentation" workflow manually
+          EOF
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git diff --staged --quiet || git commit -m "Update GraphQL documentation from schema changes
+
+          - Schema commit: ${{ github.event.client_payload.schema_commit }}
+          - Branch: ${{ github.event.client_payload.branch }}
+          - Triggered by: ${{ github.event.client_payload.triggered_by }}
+          - Timestamp: ${{ github.event.client_payload.timestamp }}"
+          git push
+

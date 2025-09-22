@@ -1,2 +1,2 @@
-schema: ../GraphQl-players/src/main/resources/graphql/schema.graphql
+schema: ./src/main/resources/graphql/schema.graphql
 documents: null
