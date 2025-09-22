@@ -30,23 +30,23 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: LATHAAJ/GraphQl-players
-          path: main-repo
+          path: main
           token: ${{ secrets.MAIN_REPO_TOKEN }}
           ref: documentGeneration
           submodules: false
 
-      - name: Debug - List files in main-repo
+      - name: Debug - List files in main
         run: |
-          echo "Contents of main-repo directory:"
-          ls -la main-repo/
-          echo "Contents of main-repo/src directory:"
-          ls -la main-repo/src/ || echo "src directory not found"
-          echo "Contents of main-repo/src/main directory:"
-          ls -la main-repo/src/main/ || echo "src/main directory not found"
-          echo "Contents of main-repo/src/main/resources directory:"
-          ls -la main-repo/src/main/resources/ || echo "src/main/resources directory not found"
-          echo "Contents of main-repo/src/main/resources/graphql directory:"
-          ls -la main-repo/src/main/resources/graphql/ || echo "src/main/resources/graphql directory not found"
+          echo "Contents of main directory:"
+          ls -la main/
+          echo "Contents of main/src directory:"
+          ls -la main/src/ || echo "src directory not found"
+          echo "Contents of main/src/main directory:"
+          ls -la main/src/main/ || echo "src/main directory not found"
+          echo "Contents of main/src/main/resources directory:"
+          ls -la main/src/main/resources/ || echo "src/main/resources directory not found"
+          echo "Contents of main/src/main/resources/graphql directory:"
+          ls -la main/src/main/resources/graphql/ || echo "src/main/resources/graphql directory not found"
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -59,7 +59,7 @@ jobs:
 
       - name: Generate documentation
         run: |
-          npx graphql-markdown ./main-repo/src/main/resources/graphql/schema.graphql --title "GraphQL API Documentation" > schema-documentation.md
+          npx graphql-markdown ./main/src/main/resources/graphql/schema.graphql --title "GraphQL API Documentation" > schema-documentation.md
 
       - name: Update documentation files
         run: |
