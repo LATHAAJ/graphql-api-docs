@@ -14,12 +14,36 @@ jobs:
       - name: Checkout docs repo
         uses: actions/checkout@v4
 
+      - name: Check if MAIN_REPO_TOKEN exists
+        run: |
+          if [ -z "${{ secrets.MAIN_REPO_TOKEN }}" ]; then
+            echo "❌ MAIN_REPO_TOKEN secret is not set!"
+            echo "Please add MAIN_REPO_TOKEN secret to this repository"
+            exit 1
+          else
+            echo "✅ MAIN_REPO_TOKEN secret is configured"
+          fi
+
       - name: Checkout main GraphQL repo
         uses: actions/checkout@v4
         with:
           repository: LATHAAJ/GraphQl-players
           path: main-repo
           token: ${{ secrets.MAIN_REPO_TOKEN }}
+          ref: documentGeneration
+
+      - name: Debug - List files in main-repo
+        run: |
+          echo "Contents of main-repo directory:"
+          ls -la main-repo/
+          echo "Contents of main-repo/src directory:"
+          ls -la main-repo/src/ || echo "src directory not found"
+          echo "Contents of main-repo/src/main directory:"
+          ls -la main-repo/src/main/ || echo "src/main directory not found"
+          echo "Contents of main-repo/src/main/resources directory:"
+          ls -la main-repo/src/main/resources/ || echo "src/main/resources directory not found"
+          echo "Contents of main-repo/src/main/resources/graphql directory:"
+          ls -la main-repo/src/main/resources/graphql/ || echo "src/main/resources/graphql directory not found"
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
