@@ -1,44 +1,69 @@
 name: Generate Documentation Site
 
 on:
-  push:
-    paths:
-      - 'src/main/resources/graphql/schema.graphql'
+  repository_dispatch:
+    types: [update-docs]
   workflow_dispatch:
+  push:
+    branches: [main]
 
 jobs:
   generate-docs-site:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout main repo
+      - name: Checkout docs repo
         uses: actions/checkout@v4
+
+      - name: Checkout main GraphQL repo
+        uses: actions/checkout@v4
+        with:
+          repository: LATHAAJ/GraphQl-players
+          path: main-repo
+          token: ${{ secrets.MAIN_REPO_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
+      - name: Install dependencies
+        run: |
+          npm install graphql-markdown
+
       - name: Generate documentation
         run: |
-          npx graphql-markdown ./src/main/resources/graphql/schema.graphql --title "GraphQL API Documentation" > schema-documentation.md
+          npx graphql-markdown ./main-repo/src/main/resources/graphql/schema.graphql --title "GraphQL API Documentation" > schema-documentation.md
 
-      - name: Setup GitBook or MkDocs
+      - name: Update documentation in docs repo
         run: |
-          npm install -g @gitbook/cli
-          # or: pip install mkdocs mkdocs-material
-
-      - name: Generate static site
-        run: |
-          # Create site structure
-          mkdir -p docs-site
-          cp schema-documentation.md docs-site/index.md
+          # Update the main documentation file
+          cp schema-documentation.md docs/graphql/schema-documentation.md
           
-          # Generate site (example with GitBook)
-          # gitbook build docs-site docs-site/_book
+          # Create a simple index page
+          cat > index.md << 'EOF'
+          # GraphQL API Documentation
+          
+          Welcome to the GraphQL API Documentation!
+          
+          ## Quick Links
+          - [Schema Documentation](./docs/graphql/schema-documentation.md)
+          - [API Reference](./docs/graphql/schema-documentation.md)
+          
+          ## About
+          This documentation is automatically generated from the GraphQL schema.
+          EOF
+          
+          # Commit and push changes
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git diff --staged --quiet || git commit -m "Update GraphQL documentation from schema changes [skip ci]"
+          git push
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs-site
+          publish_dir: ./
+          publish_branch: gh-pages
 

@@ -1,22 +1,31 @@
 name: Trigger Documentation Webhook
 
 on:
-  push:
-    paths:
-      - 'src/main/resources/graphql/schema.graphql'
+  repository_dispatch:
+    types: [update-docs]
+  workflow_dispatch:
 
 jobs:
   trigger-webhook:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout main GraphQL repo
+        uses: actions/checkout@v4
+        with:
+          repository: LATHAAJ/GraphQl-players
+          path: main-repo
+          token: ${{ secrets.MAIN_REPO_TOKEN }}
+
       - name: Trigger documentation update
         run: |
           curl -X POST "${{ secrets.DOCS_WEBHOOK_URL }}" \
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer ${{ secrets.DOCS_WEBHOOK_TOKEN }}" \
             -d '{
-              "repository": "${{ github.repository }}",
-              "commit": "${{ github.sha }}",
-              "schema_path": "src/main/resources/graphql/schema.graphql"
+              "repository": "LATHAAJ/GraphQl-players",
+              "docs_repository": "LATHAAJ/graphql-api-docs",
+              "commit": "${{ github.event.client_payload.head_commit.id || github.sha }}",
+              "schema_path": "src/main/resources/graphql/schema.graphql",
+              "triggered_by": "schema_change"
             }'
 
