@@ -1,0 +1,103 @@
+name: Generate Documentation Site
+
+on:
+  repository_dispatch:
+    types: [update-docs]
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  generate-docs-site:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout docs repo
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      - name: Check if MAIN_REPO_TOKEN exists
+        run: |
+          if [ -z "${{ secrets.MAIN_REPO_TOKEN }}" ]; then
+            echo "❌ MAIN_REPO_TOKEN secret is not set!"
+            echo "Please add MAIN_REPO_TOKEN secret to this repository"
+            exit 1
+          else
+            echo "✅ MAIN_REPO_TOKEN secret is configured"
+          fi
+
+      - name: Download schema file
+        run: |
+          # Download the schema file directly from the main repository
+          # Try main branch first, then fallback to documentGeneration branch
+          echo "🔄 Attempting to download schema from main branch..."
+          curl -H "Authorization: token ${{ secrets.MAIN_REPO_TOKEN }}" \
+               -H "Accept: application/vnd.github.v3.raw" \
+               -o schema.graphql \
+               "https://api.github.com/repos/LATHAAJ/GraphQl-players/contents/src/main/resources/graphql/schema.graphql?ref=main" || \
+          curl -H "Authorization: token ${{ secrets.MAIN_REPO_TOKEN }}" \
+               -H "Accept: application/vnd.github.v3.raw" \
+               -o schema.graphql \
+               "https://api.github.com/repos/LATHAAJ/GraphQl-players/contents/src/main/resources/graphql/schema.graphql?ref=documentGeneration"
+          
+          echo "✅ Schema file downloaded successfully"
+          echo "📁 Schema file contents:"
+          head -10 schema.graphql
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: |
+          npm install graphql-markdown
+
+      - name: Check if schema changed
+        run: |
+          # Check if the schema file has actually changed
+          if [ -f "docs/graphql/schema-documentation.html" ]; then
+            echo "📋 Comparing with existing documentation..."
+            # Generate temporary documentation to compare
+            npx graphql-markdown ./schema.graphql --title "GraphQL API Documentation" > temp-schema-documentation.md
+            
+            if diff -q temp-schema-documentation.md docs/graphql/schema-documentation.md > /dev/null 2>&1; then
+              echo "✅ No changes detected in schema. Skipping documentation update."
+              echo "SKIP_UPDATE=true" >> $GITHUB_ENV
+            else
+              echo "🔄 Schema changes detected. Proceeding with documentation update."
+              echo "SKIP_UPDATE=false" >> $GITHUB_ENV
+            fi
+          else
+            echo "🔄 No existing documentation found. Proceeding with initial generation."
+            echo "SKIP_UPDATE=false" >> $GITHUB_ENV
+          fi
+
+      - name: Generate documentation
+        if: env.SKIP_UPDATE == 'false'
+        run: |
+          npx graphql-markdown ./schema.graphql --title "GraphQL API Documentation" > schema-documentation.md
+
+      - name: Update documentation files
+        if: env.SKIP_UPDATE == 'false'
+        run: |
+          # Update the main documentation file
+          cp schema-documentation.md docs/graphql/schema-documentation.md
+          
+          echo "✅ Documentation files updated successfully"
+          echo "📁 Files created:"
+          ls -la docs/graphql/schema-documentation.md
+
+      - name: Deploy to GitHub Pages
+        if: env.SKIP_UPDATE == 'false'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.MAIN_REPO_TOKEN }}
+          publish_dir: ./
+          publish_branch: gh-pages
+
+      - name: No changes detected
+        if: env.SKIP_UPDATE == 'true'
+        run: |
+          echo "✅ No schema changes detected. Documentation is up to date."
+          echo "📅 Last documentation update: $(date)"
